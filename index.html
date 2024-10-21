@@ -1,11 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Torres de Hanoi</title>
 </head>
 <body>
-    
+    <h1>Torres de Hanoi</h1>
+    <div id="gameArea">
+        <div id="tower1" class="tower"><img src="/imagenes/Disco.png" alt="Disco1" width="200" height="100" class="image"></div>
+        <div id="tower2" class="tower"><img src="/imagenes/Disco.png" alt="Disco2" width="150" height="75" class="image"></div>
+        <div id="tower3" class="tower"><img src="/imagenes/Disco.png" alt="Disco3" width="100" height="50" class="image"></div>
+    </div>
+    <div id="message"></div>
+    <div id="timer">Tiempo: 00:00</div>
+    <div id="bestTime">Mejor tiempo: --:--</div>
+    <button id="startButton">INICIO</button>
+    <button id="saveButton">GUARDAR</button>
+    <button id="loadButton">RESTAURAR</button>
+    <script src="hanoi.js"></script>
 </body>
 </html>

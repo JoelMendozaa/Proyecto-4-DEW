@@ -1,3 +1,36 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
+.tower {
+    display: inline-block;
+    width: 200px;
+    height: 300px;
+    border: 2px solid black;
+    margin: 10px;
+    vertical-align: top;
+    position: relative;
+}
+.disk {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 30px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+#message {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+#timer {
+    font-size: 16px;
+    margin: 10px 0;
+}
+#bestTime {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.image {
+    display:flexbox;
 }
