@@ -6,6 +6,7 @@
     margin: 10px;
     vertical-align: top;
     position: relative;
+    align-items: center;
 }
 .disk {
     position: absolute;
@@ -33,4 +34,5 @@
 
 .image {
     display:flexbox;
+    justify-content: center;
 }
