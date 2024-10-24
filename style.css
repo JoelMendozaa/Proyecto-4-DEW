@@ -1,3 +1,15 @@
+body{
+    margin-left: 20px;
+    padding-left: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ebc9ff;
+    text-align: center;
+    color: #8400ff; 
+    text-shadow: 0px 0px 9px #a030fc;
+}
+
+
+
 .tower {
     display: inline-block;
     width: 200px;
@@ -38,9 +50,10 @@
 }
 
 .boton{
-    background-color: rgb(73, 137, 255);
+    background-color: rgb(204, 116, 255);
     font-family: monospace;
     text-align: center;
     border: 2px solid black;
     outline-offset: 3%;
 }
+

@@ -15,7 +15,15 @@ let startTime;
 
 // Funcion del botón de inicio
 function inicio(){
+
+    // Usuario
+    const nombreUsuario = document.querySelector('input[type="text"]').value.trim(); // trim() elimina espacios en blanco
     
+    while (nombreUsuario === ""){
+        document.getElementById("message").textContent = "Por favor, coloque su nombre";
+        nombreUsuario = document.querySelector('input[type="text"]').value.trim();
+    }
+
     // Reseteamos el temporizador anterior
     clearInterval(timerInterval);
 
@@ -27,6 +35,8 @@ function inicio(){
     document.getElementById("timer").textContent = "Tiempo: 00:00";
 }
 
+// Llama a la función inicio cuando se hace clic en el botón "INICIO"
+document.getElementById("startButton").addEventListener("click", inicio);
 
 // Función para actualizar el temporizador
 function actualizarTiempo() {
@@ -42,8 +52,7 @@ function actualizarTiempo() {
 
     document.getElementById("timer").textContent = `Tiempo: ${minutosFormateados}:${segundosFormateados}`;
 }
-// Llama a la función inicio cuando se hace clic en el botón "INICIO"
-document.getElementById("startButton").addEventListener("click", inicio);
+
 
 
 // Funcion de detener
@@ -56,8 +65,6 @@ function detener(){
 document.getElementById("stopButton").addEventListener("click", detener);
 
 //Funcion de resetear temporizador y torre
-
-
 function resetear() {
     clearInterval(timerInterval); // Detenemos el temporizador
     document.getElementById("timer").textContent = "Tiempo: 00:00"; // Reiniciamos el tiempo en pantalla
@@ -140,3 +147,9 @@ function restaurarEstado() {
 }
 // Llama a la funcion restaurar cuando se hace clic en el boton de "RESTAURAR"
 document.getElementById("loadButton").addEventListener("click", restaurarEstado);
+
+
+function mover (){
+
+    
+}

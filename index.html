@@ -6,23 +6,31 @@
     <link rel="stylesheet" href="style.css">
     <title>Torres de Hanoi</title>
 </head>
-<body>
+<body class="cursiv">
     <h1>Torres de Hanoi</h1>
+
+    <!-- Iniciar -->
+    <input type="text" placeholder="Su nombre" required>
+    <button id="startButton" class="boton">INICIO</button>
+
     <!-- Crear tablas con imagen dentro -->
     <div id="gameArea"> 
         <div id="tower1" class="tower"><img src="./imagenes/Disco.png" alt="Disco3" width="100" height="50" class="image"><img src="./imagenes/Disco.png" alt="Disco2" width="150" height="75" class="image"><img src="./imagenes/Disco.png" alt="Disco1" width="200" height="100" class="image"></div>
         <div id="tower2" class="tower"></div>
         <div id="tower3" class="tower"></div>
     </div>
-    <!-- Crear botones y timer -->
-    <div id="message"></div>
-    <div id="timer">Tiempo: 00:00</div>
-    <div id="bestTime">Mejor tiempo: --:--</div>
-    <button id="startButton" class="boton">INICIO</button>
+
+    <!-- Botones -->
     <button id="saveButton" class="boton">GUARDAR</button>
     <button id="loadButton" class="boton">RESTAURAR</button>
     <button id="resetButton" class="boton">RESETEAR</button>
     <button id="stopButton" class="boton">DETENER</button>
+
+
+    <div id="message"></div>
+    <div id="timer">Tiempo: 00:00</div>
+    <div id="bestTime">Mejor tiempo: --:--</div>
+
     <script src="code.js"></script>
 </body>
 </html>
