@@ -91,8 +91,12 @@ function resetearTorres() {
         <img src="./imagenes/Disco.png" alt="Disco2" width="150" height="75" class="image">
         <img src="./imagenes/Disco.png" alt="Disco1" width="200" height="100" class="image">
     `;
+
+    movimientosTotales = 0; // Reiniciar el contador
+    actualizarContador(); // Actualizar la pantalla
+    resetear(); // Llamar la función que ya existe para resetear las torres
 }
-document.getElementById("resetButton").addEventListener("click", resetear);
+document.getElementById("resetButton").addEventListener("click", resetearTorres);
 
 
 // Llama a la función resetear cuando se hace clic en el botón "RESTAURAR"
@@ -148,8 +152,57 @@ function restaurarEstado() {
 // Llama a la funcion restaurar cuando se hace clic en el boton de "RESTAURAR"
 document.getElementById("loadButton").addEventListener("click", restaurarEstado);
 
+let movimientosTotales = 0; // Contador de movimientos
 
-function mover (){
+// Inicializa el drag-and-drop en los discos
+function inicializarDragAndDrop() {
+    const discos = document.querySelectorAll('.image');
+    discos.forEach(disco => {
+        disco.setAttribute('draggable', true); // Permitir que los discos sean arrastrables
 
-    
+        disco.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData('discoId', e.target.alt); // Guardar el disco arrastrado
+        });
+    });
+
+    const torres = document.querySelectorAll('.tower');
+    torres.forEach(torre => {
+        torre.addEventListener('dragover', function(e) {
+            e.preventDefault(); // Permitir que el disco se pueda soltar
+        });
+
+        torre.addEventListener('drop', function(e) {
+            e.preventDefault();
+            const discoId = e.dataTransfer.getData('discoId'); // Recuperar el ID del disco
+            const discoArrastrado = document.querySelector(`img[alt="${discoId}"]`);
+            moverDisco(discoArrastrado, this); // Mover el disco a la torre objetivo
+        });
+    });
 }
+
+// Función para mover un disco
+function moverDisco(disco, torreDestino) {
+    const torreOrigen = disco.parentElement;
+    const discoDestino = torreDestino.lastElementChild; // Obtener el disco en la cima de la torre destino
+
+    // Verificar si el movimiento es válido (el disco de origen debe ser más pequeño que el disco de destino)
+    if (discoDestino && disco.clientWidth > discoDestino.clientWidth) {
+        document.getElementById("message").textContent = "Movimiento inválido: No puedes colocar un disco grande sobre un disco pequeño.";
+        return;
+    }
+
+    // Si el movimiento es válido, mover el disco
+    torreDestino.appendChild(disco);
+    movimientosTotales++; // Incrementar el contador de movimientos
+    actualizarContador(); // Actualizar la pantalla con los movimientos
+}
+
+// Función para actualizar el contador de movimientos en la interfaz
+function actualizarContador() {
+    document.getElementById("contadorMovimientos").textContent = `Movimientos: ${movimientosTotales}`;
+}
+
+// Inicializar el juego y los eventos
+document.addEventListener('DOMContentLoaded', () => {
+    inicializarDragAndDrop(); // Inicializar el drag-and-drop al cargar la página
+});

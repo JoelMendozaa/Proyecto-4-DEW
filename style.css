@@ -17,7 +17,9 @@ body{
     vertical-align: top;
     position: relative;
     align-items: center;
+    
 }
+
 .disk {
     position: absolute;
     bottom: 0;
@@ -54,5 +56,9 @@ body{
     text-align: center;
     border: 2px solid black;
     outline-offset: 3%;
+    cursor: pointer;
 }
 
+.boton:active {
+    background-color: rgb(153, 87, 191); /* Un color más oscuro */
+}
