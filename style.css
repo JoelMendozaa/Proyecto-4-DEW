@@ -8,8 +8,6 @@ body{
     text-shadow: 0px 0px 9px #a030fc;
 }
 
-
-
 .tower {
     display: inline-block;
     width: 200px;
@@ -47,6 +45,7 @@ body{
 .image {
     display:flexbox;
     justify-content: center;
+    margin-bottom: 5px
 }
 
 .boton{
