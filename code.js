@@ -1,4 +1,5 @@
-function Torre (discos, origen, destino, auxiliar, resultado){
+// Torre object constructor
+function Torre(discos, origen, destino, auxiliar, resultado) {
     this.discos = discos;
     this.origen = origen;
     this.destino = destino;
@@ -6,195 +7,136 @@ function Torre (discos, origen, destino, auxiliar, resultado){
     this.resultado = resultado;
 }
 
-const torre1 = new Torre ();
-const torre2 = new Torre ();
-const torre3 = new Torre ();
+const torre1 = document.getElementById("tower1");
+const torre2 = document.getElementById("tower2");
+const torre3 = document.getElementById("tower3");
+const torres = [torre1, torre2, torre3];
 
 let timerInterval;
 let startTime;
+let movimientosTotales = 0;
+let selectedTower = null;
+let juegoIniciado = false;
 
-// Funcion del botón de inicio
-function inicio(){
-
-    // Usuario
-    const nombreUsuario = document.querySelector('input[type="text"]').value.trim(); // trim() elimina espacios en blanco
+// Función del botón de inicio
+function inicio() {
+    const nombreUsuario = document.querySelector('input[type="text"]').value.trim();
     
-    while (nombreUsuario === ""){
+    if (nombreUsuario === "") {
         document.getElementById("message").textContent = "Por favor, coloque su nombre";
-        nombreUsuario = document.querySelector('input[type="text"]').value.trim();
+        return;
     }
 
-    // Reseteamos el temporizador anterior
     clearInterval(timerInterval);
-
     startTime = new Date();
-
     timerInterval = setInterval(actualizarTiempo, 1000);
 
     document.getElementById("message").textContent = "";
     document.getElementById("timer").textContent = "Tiempo: 00:00";
+    
+    juegoIniciado = true;
+    inicializarEventListeners();
 }
-
-// Llama a la función inicio cuando se hace clic en el botón "INICIO"
-document.getElementById("startButton").addEventListener("click", inicio);
 
 // Función para actualizar el temporizador
 function actualizarTiempo() {
     const ahora = new Date();
-    const tiempoTranscurrido = Math.floor((ahora - startTime) / 1000); // Diferencia en segundos
-
+    const tiempoTranscurrido = Math.floor((ahora - startTime) / 1000);
     const minutos = Math.floor(tiempoTranscurrido / 60);
     const segundos = tiempoTranscurrido % 60;
-
-    // Formatear los números para que siempre tengan dos dígitos
     const minutosFormateados = minutos.toString().padStart(2, '0');
     const segundosFormateados = segundos.toString().padStart(2, '0');
-
     document.getElementById("timer").textContent = `Tiempo: ${minutosFormateados}:${segundosFormateados}`;
 }
 
-
-
-// Funcion de detener
-function detener(){
-    // Detenemos el temportizador
+// Función de detener
+function detener() {
     clearInterval(timerInterval);
+    juegoIniciado = false;
 }
 
-// Llama a la función detener cuando se hace clic en el botón "DETENER"
-document.getElementById("stopButton").addEventListener("click", detener);
-
-//Funcion de resetear temporizador y torre
+// Función de resetear temporizador y torre
 function resetear() {
-    clearInterval(timerInterval); // Detenemos el temporizador
-    document.getElementById("timer").textContent = "Tiempo: 00:00"; // Reiniciamos el tiempo en pantalla
-    document.getElementById("message").textContent = ""; // Limpiamos cualquier mensaje
-    resetearTorres(); // Reiniciamos las torres
-    localStorage.clear(); // Limpiamos el localStorage
+    clearInterval(timerInterval);
+    document.getElementById("timer").textContent = "Tiempo: 00:00";
+    document.getElementById("message").textContent = "";
+    resetearTorres();
+    localStorage.removeItem("estadoTorres");
+    movimientosTotales = 0;
+    actualizarContador();
+    juegoIniciado = false;
 }
 
-
-// Funcion de resetear las torres
+// Función de resetear las torres
 function resetearTorres() {
-    const torre1 = document.getElementById("tower1");
-    const torre2 = document.getElementById("tower2");
-    const torre3 = document.getElementById("tower3");
+    torre1.innerHTML = `
+        <img src="./imagenes/Disco.png" alt="Disco1" width="100" height="50" class="image">
+        <img src="./imagenes/Disco.png" alt="Disco2" width="150" height="50" class="image">
+        <img src="./imagenes/Disco.png" alt="Disco3" width="200" height="50" class="image">
 
-    // Vaciar las torres
-    torre1.innerHTML = '';
+    `;
     torre2.innerHTML = '';
     torre3.innerHTML = '';
-
-    // Volver a poner los discos en la torre1
-    torre1.innerHTML = `
-        <img src="./imagenes/Disco.png" alt="Disco3" width="100" height="50" class="image">
-        <img src="./imagenes/Disco.png" alt="Disco2" width="150" height="75" class="image">
-        <img src="./imagenes/Disco.png" alt="Disco1" width="200" height="100" class="image">
-    `;
-
-    movimientosTotales = 0; // Reiniciar el contador
-    actualizarContador(); // Actualizar la pantalla
-    resetear(); // Llamar la función que ya existe para resetear las torres
+    inicializarEventListeners();
 }
-document.getElementById("resetButton").addEventListener("click", resetearTorres);
 
-
-// Llama a la función resetear cuando se hace clic en el botón "RESTAURAR"
-document.getElementById("loadButton").addEventListener("click", resetear);
-
-
-function guardar(){
-    const torre1 = Array.from(document.getElementById("tower1").children).map(img => img.alt);
-    const torre2 = Array.from(document.getElementById("tower2").children).map(img => img.alt);
-    const torre3 = Array.from(document.getElementById("tower3").children).map(img => img.alt);
-    
-    const tiempo = document.getElementById("timer").textContent;
-
+// Función para guardar el estado del juego
+function guardarEstado() {
     const estado = {
-        torre1,
-        torre2,
-        torre3,
-        tiempo
+        torre1: Array.from(torre1.children).map(img => img.outerHTML),
+        torre2: Array.from(torre2.children).map(img => img.outerHTML),
+        torre3: Array.from(torre3.children).map(img => img.outerHTML),
+        tiempo: document.getElementById("timer").textContent,
+        movimientos: movimientosTotales
     };
-
     localStorage.setItem("estadoTorres", JSON.stringify(estado));
-
+    document.getElementById("message").textContent = "Juego guardado";
 }
-// Llama a la funcion guardar cuando se hace clic en el botón de "GUARDAR"
-document.getElementById("saveButton").addEventListener("click", guardarEstado);
 
-
+// Función para restaurar el estado del juego
 function restaurarEstado() {
     const estadoGuardado = JSON.parse(localStorage.getItem("estadoTorres"));
-
     if (estadoGuardado) {
+        torre1.innerHTML = estadoGuardado.torre1.join('');
+        torre2.innerHTML = estadoGuardado.torre2.join('');
+        torre3.innerHTML = estadoGuardado.torre3.join('');
         document.getElementById("timer").textContent = estadoGuardado.tiempo;
-
-        const torre1 = document.getElementById("tower1");
-        const torre2 = document.getElementById("tower2");
-        const torre3 = document.getElementById("tower3");
-
-        torre1.innerHTML = '';
-        torre2.innerHTML = '';
-        torre3.innerHTML = '';
-
-        estadoGuardado.torre1.forEach(disco => {
-            torre1.innerHTML += `<img src="/imagenes/Disco.png" alt="${disco}" width="${disco === 'Disco1' ? 200 : disco === 'Disco2' ? 150 : 100}" height="${disco === 'Disco1' ? 100 : disco === 'Disco2' ? 75 : 50}" class="image">`;
-        });
-        estadoGuardado.torre2.forEach(disco => {
-            torre2.innerHTML += `<img src="/imagenes/Disco.png" alt="${disco}" width="${disco === 'Disco1' ? 200 : disco === 'Disco2' ? 150 : 100}" height="${disco === 'Disco1' ? 100 : disco === 'Disco2' ? 75 : 50}" class="image">`;
-        });
-        estadoGuardado.torre3.forEach(disco => {
-            torre3.innerHTML += `<img src="/imagenes/Disco.png" alt="${disco}" width="${disco === 'Disco1' ? 200 : disco === 'Disco2' ? 150 : 100}" height="${disco === 'Disco1' ? 100 : disco === 'Disco2' ? 75 : 50}" class="image">`;
-        });
+        movimientosTotales = estadoGuardado.movimientos;
+        actualizarContador();
+        inicializarEventListeners();
     }
-}
-// Llama a la funcion restaurar cuando se hace clic en el boton de "RESTAURAR"
-document.getElementById("loadButton").addEventListener("click", restaurarEstado);
-
-let movimientosTotales = 0; // Contador de movimientos
-
-// Inicializa el drag-and-drop en los discos
-function inicializarDragAndDrop() {
-    const discos = document.querySelectorAll('.image');
-    discos.forEach(disco => {
-        disco.setAttribute('draggable', true); // Permitir que los discos sean arrastrables
-
-        disco.addEventListener('dragstart', function(e) {
-            e.dataTransfer.setData('discoId', e.target.alt); // Guardar el disco arrastrado
-        });
-    });
-
-    const torres = document.querySelectorAll('.tower');
-    torres.forEach(torre => {
-        torre.addEventListener('dragover', function(e) {
-            e.preventDefault(); // Permitir que el disco se pueda soltar
-        });
-
-        torre.addEventListener('drop', function(e) {
-            e.preventDefault();
-            const discoId = e.dataTransfer.getData('discoId'); // Recuperar el ID del disco
-            const discoArrastrado = document.querySelector(`img[alt="${discoId}"]`);
-            moverDisco(discoArrastrado, this); // Mover el disco a la torre objetivo
-        });
-    });
 }
 
 // Función para mover un disco
-function moverDisco(disco, torreDestino) {
-    const torreOrigen = disco.parentElement;
-    const discoDestino = torreDestino.lastElementChild; // Obtener el disco en la cima de la torre destino
+function moverDisco(torreOrigen, torreDestino) {
+    if (!juegoIniciado) {
+        document.getElementById("message").textContent = "Presiona INICIO para comenzar el juego";
+        return;
+    }
 
-    // Verificar si el movimiento es válido (el disco de origen debe ser más pequeño que el disco de destino)
-    if (discoDestino && disco.clientWidth > discoDestino.clientWidth) {
+    const discoAMover = torreOrigen.lastElementChild;
+    const discoDestino = torreDestino.lastElementChild;
+
+    if (!discoAMover) {
+        document.getElementById("message").textContent = "No hay disco para mover en esta torre";
+        return;
+    }
+
+    if (discoDestino && parseInt(discoAMover.width) > parseInt(discoDestino.width)) {
         document.getElementById("message").textContent = "Movimiento inválido: No puedes colocar un disco grande sobre un disco pequeño.";
         return;
     }
 
-    // Si el movimiento es válido, mover el disco
-    torreDestino.appendChild(disco);
-    movimientosTotales++; // Incrementar el contador de movimientos
-    actualizarContador(); // Actualizar la pantalla con los movimientos
+    torreDestino.appendChild(discoAMover);
+    movimientosTotales++;
+    actualizarContador();
+
+    if (torre3.children.length === 3) {
+        document.getElementById("message").textContent = `¡Felicidades! Has completado el juego en ${movimientosTotales} movimientos.`;
+        detener();
+    } else {
+        document.getElementById("message").textContent = "Movimiento válido";
+    }
 }
 
 // Función para actualizar el contador de movimientos en la interfaz
@@ -202,7 +144,37 @@ function actualizarContador() {
     document.getElementById("contadorMovimientos").textContent = `Movimientos: ${movimientosTotales}`;
 }
 
-// Inicializar el juego y los eventos
+// Función para inicializar los event listeners
+function inicializarEventListeners() {
+    torres.forEach(torre => {
+        torre.onclick = function() {
+            if (!juegoIniciado) {
+                document.getElementById("message").textContent = "Presiona INICIO para comenzar el juego";
+                return;
+            }
+            
+            if (selectedTower === null) {
+                if (this.lastElementChild) {
+                    selectedTower = this;
+                    this.style.backgroundColor = 'rgba(255, 255, 0, 0.3)';
+                }
+            } else {
+                moverDisco(selectedTower, this);
+                selectedTower.style.backgroundColor = '';
+                selectedTower = null;
+            }
+        };
+    });
+}
+
+// Event Listeners
+document.getElementById("startButton").addEventListener("click", inicio);
+document.getElementById("stopButton").addEventListener("click", detener);
+document.getElementById("resetButton").addEventListener("click", resetear);
+document.getElementById("saveButton").addEventListener("click", guardarEstado);
+document.getElementById("loadButton").addEventListener("click", restaurarEstado);
+
+// Inicializar el juego
 document.addEventListener('DOMContentLoaded', () => {
-    inicializarDragAndDrop(); // Inicializar el drag-and-drop al cargar la página
+    resetearTorres();
 });
