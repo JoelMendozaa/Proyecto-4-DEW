@@ -22,14 +22,13 @@ body{
 
 .disk {
     position: absolute;
-    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    height: 30px;
     border-radius: 15px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
+
 #message {
     font-size: 18px;
     font-weight: bold;

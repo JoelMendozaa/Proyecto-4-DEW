@@ -67,17 +67,31 @@ function resetear() {
     juegoIniciado = false;
 }
 
-// Función de resetear las torres
 function resetearTorres() {
-    torre1.innerHTML = `
-        <img src="./imagenes/Disco.png" alt="Disco1" width="100" height="50" class="image">
-        <img src="./imagenes/Disco.png" alt="Disco2" width="150" height="50" class="image">
-        <img src="./imagenes/Disco.png" alt="Disco3" width="200" height="50" class="image">
+    torre1.innerHTML = ''; // Vaciar torre1 antes de añadir discos
 
-    `;
-    torre2.innerHTML = '';
-    torre3.innerHTML = '';
-    inicializarEventListeners();
+    // Crear discos como imágenes y agregarlos a torre1
+    const discos = [
+        { width: 200, bottom: 0, alt: "Disco3" },   // Disco más grande en la base
+        { width: 150, bottom: 55, alt: "Disco2" },  // Disco medio encima del anterior
+        { width: 100, bottom: 110, alt: "Disco1" }  // Disco más pequeño arriba
+    ];
+
+    discos.forEach(discoData => {
+        const disco = document.createElement("img");
+        disco.src = "./imagenes/Disco.png";
+        disco.alt = discoData.alt;
+        disco.width = discoData.width;
+        disco.height = 50;
+        disco.className = "disk";
+        disco.style.bottom = `${discoData.bottom}px`;
+        torre1.appendChild(disco);
+    });
+
+    torre2.innerHTML = ''; // Asegurar que torre2 esté vacía
+    torre3.innerHTML = ''; // Asegurar que torre3 esté vacía
+    
+    inicializarEventListeners(); // Reiniciar eventos
 }
 
 // Función para guardar el estado del juego
@@ -107,10 +121,10 @@ function restaurarEstado() {
     }
 }
 
-// Función para mover un disco
+// Función para mover un disco de una torre a otra
 function moverDisco(torreOrigen, torreDestino) {
     if (!juegoIniciado) {
-        document.getElementById("message").textContent = "Presiona INICIO para comenzar el juego";
+        mostrarMensaje("Presiona INICIO para comenzar el juego");
         return;
     }
 
@@ -118,24 +132,30 @@ function moverDisco(torreOrigen, torreDestino) {
     const discoDestino = torreDestino.lastElementChild;
 
     if (!discoAMover) {
-        document.getElementById("message").textContent = "No hay disco para mover en esta torre";
+        mostrarMensaje("No hay disco para mover en esta torre");
         return;
     }
 
+    // Verificar que no se coloque un disco grande sobre uno más pequeño
     if (discoDestino && parseInt(discoAMover.width) > parseInt(discoDestino.width)) {
-        document.getElementById("message").textContent = "Movimiento inválido: No puedes colocar un disco grande sobre un disco pequeño.";
+        mostrarMensaje("Movimiento inválido: No puedes colocar un disco grande sobre un disco pequeño.");
         return;
     }
 
+    // Calcular la nueva posición del disco
+    const nuevaPosicion = torreDestino.children.length * 55;
+    discoAMover.style.bottom = `${nuevaPosicion}px`;
+
+    // Mover el disco a la torre de destino
     torreDestino.appendChild(discoAMover);
     movimientosTotales++;
     actualizarContador();
 
     if (torre3.children.length === 3) {
-        document.getElementById("message").textContent = `¡Felicidades! Has completado el juego en ${movimientosTotales} movimientos.`;
+        mostrarMensaje(`¡Felicidades! Has completado el juego en ${movimientosTotales} movimientos.`);
         detener();
     } else {
-        document.getElementById("message").textContent = "Movimiento válido";
+        mostrarMensaje("Movimiento válido");
     }
 }
 
@@ -144,19 +164,24 @@ function actualizarContador() {
     document.getElementById("contadorMovimientos").textContent = `Movimientos: ${movimientosTotales}`;
 }
 
+// Función para mostrar mensajes
+function mostrarMensaje(mensaje) {
+    document.getElementById("message").textContent = mensaje;
+}
+
 // Función para inicializar los event listeners
 function inicializarEventListeners() {
     torres.forEach(torre => {
         torre.onclick = function() {
             if (!juegoIniciado) {
-                document.getElementById("message").textContent = "Presiona INICIO para comenzar el juego";
+                mostrarMensaje("Presiona INICIO para comenzar el juego");
                 return;
             }
             
             if (selectedTower === null) {
                 if (this.lastElementChild) {
                     selectedTower = this;
-                    this.style.backgroundColor = 'rgba(255, 255, 0, 0.3)';
+                    this.style.backgroundColor = 'rgb(183, 107, 255)';
                 }
             } else {
                 moverDisco(selectedTower, this);
