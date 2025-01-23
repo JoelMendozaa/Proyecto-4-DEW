@@ -1,4 +1,4 @@
-body{
+body {
     margin-left: 20px;
     padding-left: 15px;
     font-family: Arial, Helvetica, sans-serif;
@@ -10,46 +10,48 @@ body{
 
 .tower {
     display: inline-block;
-    width: 200px;
-    height: 300px;
+    width: 200px; /* Ancho de la torre */
+    height: 300px; /* Altura de la torre */
     border: 2px solid black;
     margin: 10px;
-    vertical-align: top;
-    position: relative;
-    align-items: center;
-    
+    position: relative; /* Esto permite que los discos se posicionen dentro de la torre */
+    background-color: #f5f5f5; /* Fondo para visualizar mejor las torres */
+    overflow: hidden; /* Evita que los discos se desborden */
 }
 
 .disk {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    position: absolute; /* Permite colocar los discos en posiciones específicas dentro de la torre */
+    left: 50%; /* Centra los discos horizontalmente */
+    transform: translateX(-50%); /* Ajuste para centrar completamente */
     border-radius: 15px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* Animación suave */
 }
+
+/* Controlar la altura y el espaciado entre los discos */
+.disk:nth-child(1) { bottom: 0px; } /* Disco más grande en la base */
+.disk:nth-child(2) { bottom: 55px; } /* Disco medio encima del anterior */
+.disk:nth-child(3) { bottom: 110px; } /* Disco más pequeño arriba */
 
 #message {
     font-size: 18px;
     font-weight: bold;
     margin: 10px 0;
 }
-#timer {
-    font-size: 16px;
-    margin: 10px 0;
-}
-#bestTime {
+
+#timer, #bestTime {
     font-size: 16px;
     margin: 10px 0;
 }
 
 .image {
-    display:flexbox;
+    /* Elimina display:flexbox para que no interfiera con el apilado */
+    display: block;
     justify-content: center;
-    margin-bottom: 5px
+    margin-bottom: 5px; /* Espaciado entre imágenes */
 }
 
-.boton{
+.boton {
     background-color: rgb(204, 116, 255);
     font-family: monospace;
     text-align: center;
